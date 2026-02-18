@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Frontend — Next.js
 
-## Getting Started
+Lightweight Next.js frontend for the ECommerce Platform.
 
-First, run the development server:
+## Quick start
 
+1. Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd frontend
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Environment
+- Copy .env.example -> .env and set API base URL (example):
+```
+NEXT_PUBLIC_API_BASE=http://localhost:8000/api
+NEXT_PUBLIC_WS_URL=
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Run (development)
+```bash
+npm run dev
+# open http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Build / Start (production)
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Features
+- Product listing, product detail, seller product creation UI.
+- Cart & coin-based checkout integrated with backend.
+- Animated dashboard counters (CountUp) for products, sales, customers.
+- Wallet UI showing seller coins.
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
+- Uses Bearer tokens (Laravel Sanctum) for protected API calls. See frontend/services/auth.service.js.
+- Prices displayed as whole units (no decimal cents).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Testing & linting
+```bash
+# if available
+npm run test
+npm run lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
+- Can be deployed to Vercel, Netlify, or any static host supporting Next.js.
+- Ensure NEXT_PUBLIC_API_BASE points to backend API and CORS/Sanctum cookie config is correct.
 
-## Deploy on Vercel
+## Troubleshooting
+- 401 on protected routes: ensure token stored and Authorization header is sent.
+- API URL errors: verify NEXT_PUBLIC_API_BASE and backend is running.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Seller / Wallet & Frontend Notes
+
+- Products created from the frontend are assigned to the creating user (`products.user_id`).
+- Only admins can delete products; the backend returns HTTP 403 for non-admin delete attempts.
+- Coin-based checkout: when a purchase completes, the product owner (seller) is credited the sale amount in their `coins` balance. The backend updates seller balances inside the checkout transaction to ensure consistency.
+- Dashboard: `frontend/components/OverviewTab.jsx` uses a small `CountUp` component to animate totals (products, sales, customers).
+- Prices: this frontend displays `Total Sales` in whole units (no decimals). If you want whole-unit display applied elsewhere, I can update additional components.
+
+Files of interest (frontend):
+- `frontend/components/OverviewTab.jsx` — animated counters and total-sales formatting.
+- `frontend/services/auth.service.js` — API client and auth helpers used across the app.
+
+Quick manual test (frontend + backend):
+
+1. Start backend and frontend:
+
+```bash
+cd backend
+php artisan serve --host=127.0.0.1 --port=8000
+
+cd ../frontend
+npm install
+npm run dev
+```
+
+2. Create a seller account and add a product from the frontend.
+3. Create a buyer account and ensure the buyer has enough `coins` (seed or update DB directly).
+4. As the buyer, add the product to cart and checkout via the frontend; verify buyer coins decreased and seller coins increased.
+
+If you'd like, I can update other frontend components to show whole-unit prices, add a wallet UI, or include example curl commands for the flow.

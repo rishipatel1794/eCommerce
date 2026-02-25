@@ -23,10 +23,11 @@ const Navbar = () => {
 		};
 		fetchProducts();
 
-		if(role === "admin") {
-			toast.info("Welcome Admin! You can manage your products in the Admin section.");
+		if (role === "admin") {
+			toast.info(
+				"Welcome Admin! You can manage your products in the Admin section.",
+			);
 		}
-
 	}, []);
 
 	const handleLogout = async () => {
@@ -87,12 +88,22 @@ const Navbar = () => {
 							Products
 						</Link>
 						{token && (
-						<Link
-							href="/admin"
-							className="text-gray-700 hover:text-indigo-600 transition"
-						>
-							Admin
-						</Link>
+							<>
+								<Link
+									href="/admin"
+									className="text-gray-700 hover:text-indigo-600 transition"
+								>
+									Admin
+								</Link>
+							</>
+						)}
+						{role === "admin" && (
+							<Link
+								href="/admin-chat"
+								className="text-gray-700 hover:text-indigo-600 transition"
+							>
+								Admin Chat
+							</Link>
 						)}
 
 						{token && role !== "admin" && (
@@ -110,6 +121,12 @@ const Navbar = () => {
 								>
 									History
 								</Link>
+								<Link
+									href="/chat"
+									className="text-gray-700 hover:text-indigo-600 transition"
+								>
+									Chat
+								</Link>
 								<Wallet />
 							</>
 						)}
@@ -124,6 +141,7 @@ const Navbar = () => {
 								</span>
 							</Link>
 						)}
+
 						<div className="flex items-center space-x-4">
 							{token ? (
 								<div className="flex items-center space-x-2">

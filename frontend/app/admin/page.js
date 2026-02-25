@@ -3,11 +3,14 @@ import AddProductForm from "@/components/AddProductForm";
 import OverviewTab from "@/components/OverviewTab";
 import ProductManagement from "@/components/ProductManagement";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { LayoutDashboard, Package, Plus } from "lucide-react";
+import { LayoutDashboard, Package, Plus, MessageSquare } from "lucide-react";
 import React, {  useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const page = () => {
 	const [activeTab, setActiveTab] = useState("overview");
+	const { token, role } = useAuth();
+	console.log("role" , role)
 
 	return (
 		<ProtectedRoute adminOnly={true}>
@@ -59,7 +62,17 @@ const page = () => {
 									<Plus className="h-5 w-5" />
 									<span>Add Product</span>
 								</button>
+								{token && role === "admin" && (
+								<button
+									onClick={() => window.location.href = '/admin/chat'}
+									className={`flex items-center space-x-2 px-6 py-4 border-b-2 font-medium text-sm whitespace-nowrap border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300`}
+								>
+									<MessageSquare className="h-5 w-5" />
+									<span>Messages</span>
+								</button>
+								)}
 							</nav>
+
 						</div>
 					</div>
 

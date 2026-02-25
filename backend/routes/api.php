@@ -6,6 +6,12 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Middleware\LogApiRequests;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\ChatController;
+use Illuminate\Support\Facades\Broadcast;
+
+Route::post('/broadcasting/auth', function (Request $request) {
+    return Broadcast::auth($request);
+})->middleware('auth:sanctum');
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -27,6 +33,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/total-products', [ProductController::class, 'totalProducts']);
     Route::get('/total-sales', [ProductController::class, 'totalSales']);
     Route::get('/customers', [AuthController::class, 'customers']);
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+    Route::get('/chat/messages/{conversationId}', [ChatController::class, 'getMessages']);
+    Route::get('/chat/conversations', [ChatController::class, 'getConversations']);
+    Route::get('/chat/users', [ChatController::class, 'getUsers']);
+    Route::post('/chat/read/{conversationId}', [ChatController::class, 'markAsRead']);
+    
 
     Route::middleware('role:user')->group(function () {
         Route::get('/cart', [CartController::class, 'index']);
@@ -38,9 +50,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/orders', [CartController::class, 'orders']);
         Route::get('/history', [CartController::class, 'history']);
         Route::get('/orders/{order}/invoice', [CartController::class, 'downloadInvoice']);
-    });
-
-    Route::middleware('role:admin')->group(function () {
+        // Frontend-friendly aliases
+        });
+        
+        Route::middleware('role:admin')->group(function () {
         Route::post('/products/upload', [ProductController::class, 'uploadBulk']);
         Route::apiResource('products', ProductController::class)->except(['index', 'show']);
     });

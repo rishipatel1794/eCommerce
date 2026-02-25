@@ -15,11 +15,12 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    // include broadcasting auth route so Pusher auth preflight gets CORS headers
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'broadcasting/*'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => ['http://localhost:3000', 'http://127.0.0.1:3000'],
 
     'allowed_origins_patterns' => [],
 

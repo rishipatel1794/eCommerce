@@ -7,6 +7,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CartProvider } from "@/context/CartContext";
+import Chat from "@/components/Chat/Chat";
 const geistSans = Geist({
 	variable: "--font-geist-sans",
 	subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
 						<Navbar />
 						{children}
 						<Footer />
+						<Chat />
 						</CartProvider>
 						<ToastContainer
 							position="top-right"
